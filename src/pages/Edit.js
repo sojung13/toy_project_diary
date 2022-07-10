@@ -1,22 +1,33 @@
-import { useNavigate, useSearchParams } from "react-router-dom";
+import {useContext, useEffect, useState} from 'react'
+import { useNavigate, useParams } from "react-router-dom";
+import { DiaryStateContext } from '../App';
+import DiaryEditor from '../components/DiaryEditor';
 
 const Edit = () => {
+  const [originData, setOriginData ] = useState()
   const navigate = useNavigate()
-  const [ searchParams, setSearchParams ] = useSearchParams()
+  const {id} = useParams()
 
-  const id = searchParams.get('id')
-  console.log('id::::', id)
+  const diaryList = useContext(DiaryStateContext)
 
-  const mode = searchParams.get('mode')
-  console.log('mode :: ', mode)
+  useEffect(()=> {
+    if(diaryList.length >= 1) {
+      const targetDiary = diaryList.find((it)=> parseInt(it.id) === parseInt(id))
+      console.log(targetDiary)
+      if (targetDiary) {
+        // 일기가 존재할 때
+        setOriginData(targetDiary)
+      } else {
+        // 일기가 없을 떄
+        alert('존재하지 않는 일기입니다')
+        navigate('/',{replace:true})
+      }
+    }
+  },[id,diaryList])
 
   return (
     <div>
-      <h1>Edit</h1>
-      에딧에딧
-      <button onClick={()=> setSearchParams({who:'박소정'})}>QS바꾸기</button>
-      <button onClick={()=> navigate("/home")}>HOME</button>
-      <button onClick={()=>navigate(-1)}>뒤로가기</button>
+      {originData && <DiaryEditor isEdit={true} originData={originData}></DiaryEditor>}
     </div>
   )
 }

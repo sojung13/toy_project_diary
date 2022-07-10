@@ -11,7 +11,7 @@ const reducer = (state, action )=> {
   let newState = []
   switch(action.type) {
     case 'INIT':{
-      return action.data
+      return action.data;
     }
     case 'CREATE':{
       const newItem = {
@@ -63,13 +63,16 @@ function App() {
   const dataId = useRef(0)
 
   // create
-  const onCreate = (date, content, emotion ) => {
-    dispatch({type:'CREATE', data: {
-      id : dataId.current,
-      data: new Date(date).getTime(),
-      content,
-      emotion
-    }})
+  const onCreate = (date, content, emotion) => {
+    dispatch({
+      type: "CREATE",
+      data: {
+        id : dataId.current,
+        date: new Date(date).getTime(),
+        content,
+        emotion
+    }
+  })
     dataId.current += 1
   }
 
@@ -79,14 +82,17 @@ function App() {
   }
 
   //edit
-  const onEdit = (targetId, content, emotion, date) => {
-    dispatch({type:'EDIT', data:{
-      id: targetId,
-      date : new Date(date).getTime(),
-      content,
-      emotion
-    }})
-  }
+  const onEdit = (targetId, date, content, emotion) => {
+    dispatch({
+      type: "EDIT",
+      data: {
+        id: targetId,
+        date: new Date(date).getTime(),
+        content,
+        emotion,
+      },
+    });
+  };
 
   return (
     <DiaryStateContext.Provider value={data}>
@@ -95,8 +101,8 @@ function App() {
           <div className="App">
             <Routes>
               <Route path='/' element={<Home></Home>}></Route>
-              <Route path='/edit' element={<Edit></Edit>}></Route>
               <Route path='/new' element={<New></New>}></Route>
+              <Route path='/edit/:id' element={<Edit></Edit>}></Route>
               <Route path='/diary/:id' element={<Diary></Diary>}></Route>
             </Routes>
           </div>
